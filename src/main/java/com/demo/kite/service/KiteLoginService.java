@@ -31,23 +31,20 @@ public class KiteLoginService {
 
     public User generateSession(String requestToken) throws IOException, KiteException, JSONException {
         log.info("Generating session with request token: {}", requestToken);
-        System.out.println(kiteConnect.getUserId());
-        
-        
-        
-        // Generate session using token and secret
+
+        // Step 1: Generate session using token and secret
         User user = kiteConnect.generateSession(requestToken, secret);
 
-        // Save the credentials
+        // Step 2: Save the credentials using values from the User object
         KiteSessionInfo credentials = new KiteSessionInfo();
-        credentials.setAccessToken(kiteConnect.getAccessToken());
-        credentials.setPublicToken(kiteConnect.getPublicToken());
+        credentials.setAccessToken(user.accessToken);     // set from User
+        credentials.setPublicToken(user.publicToken);     // set from User
         credentials.setUserId(kiteConnect.getUserId());
         credentials.setLoginTime(LocalDateTime.now());
 
         credentialsRepository.save(credentials);
 
-        log.info("Session generated and saved for user: {}", user.userId);
+        log.info("✅ Session generated and saved for user: {}", user.userId);
         return user;
     }
 }
