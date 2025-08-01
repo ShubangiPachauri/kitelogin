@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class KiteLoginService {
 
     private final KiteConnect kiteConnect;
-    private final KiteSessionRepository credentialsRepository;
+    private final KiteSessionRepository sessionRepo;
 
     @Value("${kite.secret}")
     private String secret;
@@ -42,9 +42,17 @@ public class KiteLoginService {
         credentials.setUserId(kiteConnect.getUserId());
         credentials.setLoginTime(LocalDateTime.now());
 
-        credentialsRepository.save(credentials);
+        sessionRepo.save(credentials);
 
         log.info("✅ Session generated and saved for user: {}", user.userId);
         return user;
+    }
+    public KiteConnect getKiteConnect() {
+        return this.kiteConnect;
+    }
+ // ✅ NEW METHOD HERE
+    public KiteSessionInfo getLatestSession() {
+        return sessionRepo.findTopByOrderByLoginTimeDesc()
+                .orElseThrow(() -> new RuntimeException("⚠️ No session found. Please login first."));
     }
 }

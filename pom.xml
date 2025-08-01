@@ -79,6 +79,12 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+  <groupId>jakarta.validation</groupId>
+  <artifactId>jakarta.validation-api</artifactId>
+</dependency>
+
 
         <!-- Kite Connect -->
         <dependency>
